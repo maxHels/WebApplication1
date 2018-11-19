@@ -10,30 +10,55 @@ namespace WebApplication1
 {
     public class HTMLParser
     {
-        public List<PostTitle> GetPostTitle(string HTML)
+        public List<PostTitle> GetAllPostTitle(string HTML)
         {
             List<PostTitle> posts = new List<PostTitle>();
 
             var htmlDoc = new HtmlDocument();
             htmlDoc.LoadHtml(HTML);
+            posts = GetPosts(htmlDoc);
 
-            var postsLists = htmlDoc.DocumentNode.Descendants("ul")
+            return posts;
+        }
+
+        private List<PostTitle> GetPosts(HtmlDocument doc)
+        {
+            var postsLists = doc.DocumentNode.Descendants("ul")
                 .Where(node => node.GetAttributeValue("class", "")
                 .Equals("post-list")).ToList();
             List<HtmlNode> postsInUl = new List<HtmlNode>();
+            List<PostTitle> posts = new List<PostTitle>();
 
-            foreach(var ul in postsLists)
+            postsInUl = PostsInUls(postsLists);
+
+            posts = getPost(postsInUl);
+
+            return posts;
+        }
+
+        private List<HtmlNode> PostsInUls(List<HtmlNode> uls)
+        {
+            List<HtmlNode> postsInUl = new List<HtmlNode>();
+            foreach (var ul in uls)
             {
-                var postList = htmlDoc.DocumentNode.Descendants("article").ToList();
-                foreach(var p in postsLists)
+                foreach (var article in ul.Descendants("article").ToList())
                 {
-                    postsInUl.Add(p);
+                    postsInUl.Add(article);
                 }
             }
+            return postsInUl;
+        }
 
-            foreach(var p in postsInUl)
+        private List<PostTitle> getPost(List<HtmlNode> postsInUl)
+        {
+            List<PostTitle> posts = new List<PostTitle>();
+
+            foreach (var p in postsInUl)
             {
-                string src = p.Descendants("img").ToList()[0].GetAttributeValue("src", "");
+                string src = "";
+                var img = p.Descendants("img").ToList();
+                if(img.Count != 0)
+                    src = img[0].GetAttributeValue("src", "");
                 string title = p.Descendants("header").ToList()[0]
                     .Descendants("a").ToList()[0]
                     .GetAttributeValue("title", "");
