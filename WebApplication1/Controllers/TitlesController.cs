@@ -25,6 +25,14 @@ namespace WebApplication1.Controllers
             return postsTemlates;
         }
 
+        [HttpGet("getByTag")]
+        public async Task<ActionResult<IEnumerable<PostTitle>>> GetTitlesByTagAsync(string category)
+        {
+            string url = "http://35.196.212.207/tag/" + category;
+            var postsTemlates = await new HTMLParser().GetPostTitlesByTagAsync(url);
+            return postsTemlates;
+        }
+
         // GET api/values/5
         [HttpGet("{id}")]
         public ActionResult<string> Get(int id)

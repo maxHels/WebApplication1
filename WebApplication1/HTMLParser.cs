@@ -25,18 +25,45 @@ namespace WebApplication1
             return posts;
         }
 
-        /*public async Task<List<PostTitle>> GetPostTitlesByTagAsync(string URL)
+        public async Task<List<PostTitle>> GetPostTitlesByTagAsync(string URL)
         {
             var httpClient = new HttpClient();
-            var html = await httpClient.GetStringAsync(URL);
+            var HTML = await httpClient.GetStringAsync(URL);
 
+            List<PostTitle> posts = new List<PostTitle>();
 
+            var htmlDoc = new HtmlDocument();
+            htmlDoc.LoadHtml(HTML);
+
+            var postsLists = htmlDoc.DocumentNode.Descendants("div")
+                .Where(node => node.GetAttributeValue("id", "")
+                .Equals("masonry")).ToList();
+            var articles = postsLists[0].Descendants("article").ToList();
+            posts = GetPostsFromBigBanner(articles);
+
+            return posts;
         }
 
-        private List<PostTitle> GetBigPostTitles(HtmlDocument doc)
+        private List<PostTitle> GetPostsFromBigBanner(List<HtmlNode> articles)
         {
+            List<PostTitle> posts = new List<PostTitle>();
 
-        }*/
+            foreach (var art in articles)
+            {
+                string src = "";
+                var img = art.Descendants("img").ToList();
+                if (img.Count != 0)
+                    src = img[0].GetAttributeValue("src", "");
+                string title = art.Descendants("h3").ToList()[0]
+                    .Descendants("a").ToList()[0]
+                    .GetAttributeValue("title", "");
+                string url = art.Descendants("figure").ToList()[0].Descendants("a").ToList()[0].GetAttributeValue("href", "");
+                string posted = art.Descendants("figure").ToList()[0].Descendants("a").ToList()[0].GetAttributeValue("title", "");
+                posts.Add(new PostTitle(title, src, posted, url));
+            }
+
+            return posts;
+        }
 
         private List<PostTitle> GetPosts(List<HtmlNode> postsList)
         {
@@ -45,7 +72,7 @@ namespace WebApplication1
 
             postsInUl = PostsInUls(postsList);
 
-            posts = getPost(postsInUl);
+            posts = GetPost(postsInUl);
 
             return posts;
         }
@@ -63,7 +90,7 @@ namespace WebApplication1
             return postsInUl;
         }
 
-        private List<PostTitle> getPost(List<HtmlNode> postsInUl)
+        private List<PostTitle> GetPost(List<HtmlNode> postsInUl)
         {
             List<PostTitle> posts = new List<PostTitle>();
 
