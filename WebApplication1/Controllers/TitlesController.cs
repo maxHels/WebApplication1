@@ -18,10 +18,8 @@ namespace WebApplication1.Controllers
         public async Task<ActionResult<IEnumerable<PostTitle>>> Get()
         {
             var url = "http://35.196.212.207/";
-            var httpClient = new HttpClient();
-            var html = await httpClient.GetStringAsync(url);
 
-            var postsTemlates = new HTMLParser().GetAllPostTitle(html);
+            var postsTemlates = await new HTMLParser().GetAllPostTitleAsync(url);
             return postsTemlates;
         }
 

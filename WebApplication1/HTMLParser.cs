@@ -11,12 +11,12 @@ namespace WebApplication1
 {
     public class HTMLParser
     {
-        public List<PostTitle> GetAllPostTitle(string HTML)
+        public async Task<List<PostTitle>> GetAllPostTitleAsync(string URL)
         {
             List<PostTitle> posts = new List<PostTitle>();
 
-            var htmlDoc = new HtmlDocument();
-            htmlDoc.LoadHtml(HTML);
+            var htmlDoc = await new PageLoader().LoadHtmlDocumentAsync(URL);
+
             var postsLists = htmlDoc.DocumentNode.Descendants("ul")
                 .Where(node => node.GetAttributeValue("class", "")
                 .Equals("post-list")).ToList();
@@ -27,20 +27,15 @@ namespace WebApplication1
 
         public async Task<List<PostTitle>> GetPostTitlesByTagAsync(string URL)
         {
-            var httpClient = new HttpClient();
-            var HTML = await httpClient.GetStringAsync(URL);
-
             List<PostTitle> posts = new List<PostTitle>();
 
-            var htmlDoc = new HtmlDocument();
-            htmlDoc.LoadHtml(HTML);
+            var htmlDoc = await new PageLoader().LoadHtmlDocumentAsync(URL);
 
             var postsLists = htmlDoc.DocumentNode.Descendants("div")
                 .Where(node => node.GetAttributeValue("id", "")
                 .Equals("masonry")).ToList();
             var articles = postsLists[0].Descendants("article").ToList();
             posts = GetPostsFromBigBanner(articles);
-
             return posts;
         }
 
