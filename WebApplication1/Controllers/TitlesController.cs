@@ -19,7 +19,7 @@ namespace WebApplication1.Controllers
         {
             var url = "http://35.196.212.207/";
 
-            var postsTemlates = await new HTMLParser().GetAllPostTitleAsync(url);
+            var postsTemlates = await new TitlesParser().GetAllPostTitleAsync(url);
             return postsTemlates;
         }
 
@@ -27,7 +27,7 @@ namespace WebApplication1.Controllers
         public async Task<ActionResult<IEnumerable<PostTitle>>> GetTitlesByTagAsync(string category)
         {
             string url = "http://35.196.212.207/tag/" + category;
-            var postsTemlates = await new HTMLParser().GetPostTitlesByTagAsync(url);
+            var postsTemlates = await new TitlesParser().GetPostTitlesByTagAsync(url);
             return postsTemlates;
         }
 

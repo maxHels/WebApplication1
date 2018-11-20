@@ -12,7 +12,7 @@
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
-      "launchUrl": "api/titles",
+      "launchUrl": "api/posts?pageGuid=nazvaniya-porod-sobak-o-kotoryh-mnogie-dazhe-ne-dogadyvayutsya/",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

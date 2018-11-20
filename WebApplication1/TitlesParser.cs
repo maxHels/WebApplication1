@@ -9,7 +9,7 @@ using WebApplication1.Models;
 
 namespace WebApplication1
 {
-    public class HTMLParser
+    public class TitlesParser
     {
         public async Task<List<PostTitle>> GetAllPostTitleAsync(string URL)
         {
