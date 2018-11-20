@@ -3,6 +3,7 @@ using HtmlAgilityPack;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using WebApplication1.Models;
 
@@ -16,20 +17,33 @@ namespace WebApplication1
 
             var htmlDoc = new HtmlDocument();
             htmlDoc.LoadHtml(HTML);
-            posts = GetPosts(htmlDoc);
+            var postsLists = htmlDoc.DocumentNode.Descendants("ul")
+                .Where(node => node.GetAttributeValue("class", "")
+                .Equals("post-list")).ToList();
+            posts = GetPosts(postsLists);
 
             return posts;
         }
 
-        private List<PostTitle> GetPosts(HtmlDocument doc)
+        /*public async Task<List<PostTitle>> GetPostTitlesByTagAsync(string URL)
         {
-            var postsLists = doc.DocumentNode.Descendants("ul")
-                .Where(node => node.GetAttributeValue("class", "")
-                .Equals("post-list")).ToList();
+            var httpClient = new HttpClient();
+            var html = await httpClient.GetStringAsync(URL);
+
+
+        }
+
+        private List<PostTitle> GetBigPostTitles(HtmlDocument doc)
+        {
+
+        }*/
+
+        private List<PostTitle> GetPosts(List<HtmlNode> postsList)
+        {
             List<HtmlNode> postsInUl = new List<HtmlNode>();
             List<PostTitle> posts = new List<PostTitle>();
 
-            postsInUl = PostsInUls(postsLists);
+            postsInUl = PostsInUls(postsList);
 
             posts = getPost(postsInUl);
 
