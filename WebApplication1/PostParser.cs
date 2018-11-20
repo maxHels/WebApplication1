@@ -37,6 +37,16 @@ namespace WebApplication1
                         string src = el.Descendants("img").ToList()[0].GetAttributeValue("src", "");
                         posts.Add(new Post("image", src));
                     }
+                    else if(el.OriginalName=="ol"||el.OriginalName=="ul")
+                    {
+                        var values = el.Descendants("li").ToList();
+                        List<string> liValues = new List<string>();
+                        foreach(var li in values)
+                        {
+                            liValues.Add(li.InnerText);
+                        }
+                        posts.Add(new ListInPost(el.OriginalName, "", liValues));
+                    }
                     else
                     {
                         posts.Add(new Post(el.OriginalName, el.InnerHtml));
